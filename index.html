@@ -1,140 +1,58 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>NFL 3-Row Overlay</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NFL Team Overlay</title>
 <style>
-  :root{
-    --bar-h: 88px;
-    --pad: 10px;
-    --chip-h: 64px;
-    --chip-w: 64px;
-    --chip-gap: 10px;
-    --cross-w: 6px;
-  }
-  html,body{
-    margin:0; padding:0;
-    background: transparent;
-    font-family: sans-serif;
-    color:#fff;
-  }
-  .wrap{
-    width: 100%;
-    display: grid;
-    gap: 8px;
-  }
-  .row{
-    position: relative;
-    height: var(--bar-h);
-    display: flex;
-    align-items: center;
-    gap: var(--chip-gap);
-    padding: var(--pad);
-    overflow: hidden;
-    border-radius: 14px;
-    box-shadow: 0 2px 12px rgba(0,0,0,.25) inset, 0 4px 12px rgba(0,0,0,.22);
-    border: 1px solid rgba(255,255,255,.15);
-  }
-  .gold{
-    background: linear-gradient(180deg, #f7e27b, #d6b84c);
-  }
-  .silver{
-    background: linear-gradient(180deg, #f2f5f7, #bcc3c9);
-  }
-  .bronze{
-    background: linear-gradient(180deg, #e9b07a, #b8763a);
-  }
-  /* Crown on the left */
-  .crown{
-    height: 50px;
-    width: 50px;
-    flex: 0 0 auto;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    margin-right: 8px;
-  }
-  .gold .crown{
-    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Crown_icon_gold.svg/512px-Crown_icon_gold.svg.png');
-  }
-  .silver .crown{
-    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Crown_icon_silver.svg/512px-Crown_icon_silver.svg.png');
-  }
-  .bronze .crown{
-    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Crown_icon_gold.svg/512px-Crown_icon_gold.svg.png'); /* bronze crown not common, using gold */
-    filter: hue-rotate(40deg) saturate(0.7);
-  }
-  .chip{
-    position: relative;
-    height: var(--chip-h);
-    min-width: var(--chip-w);
-    flex: 0 0 auto;
-    border-radius: 12px;
-    background: rgba(0,0,0,.15);
-    display: grid;
-    place-items: center;
-    cursor: grab;
-    border: 1px solid rgba(255,255,255,.18);
-  }
-  .chip img{
-    max-height: calc(var(--chip-h) - 12px);
-    max-width: calc(var(--chip-w) * 1.6);
-    object-fit: contain;
-  }
-  .chip.crossed::before,
-  .chip.crossed::after{
-    content:"";
-    position:absolute;
-    left: 6px; right: 6px; top: 6px; bottom: 6px;
-  }
-  .chip.crossed::before{
-    transform: rotate(45deg);
-    border-top: var(--cross-w) solid rgba(220,0,0,.95);
-    border-bottom: var(--cross-w) solid rgba(220,0,0,.95);
-    top: 50%; bottom: 50%;
-  }
-  .chip.crossed::after{
-    transform: rotate(-45deg);
-    border-left: var(--cross-w) solid rgba(220,0,0,.95);
-    border-right: var(--cross-w) solid rgba(220,0,0,.95);
-    left: 50%; right: 50%;
-  }
-  .row.dragover{ outline: 3px dashed rgba(255,255,255,.4); outline-offset: -6px; }
+    body {
+        margin: 0;
+        background-color: black;
+        font-family: Arial, sans-serif;
+    }
+    .row {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+    }
+    .gold { background-color: gold; }
+    .silver { background-color: silver; }
+    .bronze { background-color: peru; }
+    .crown {
+        height: 40px;
+        margin-right: 10px;
+    }
+    .logo {
+        height: 40px;
+        margin: 0 5px;
+    }
 </style>
 </head>
 <body>
-<div class="wrap" id="wrap">
-  <div class="row gold" data-row="gold"><div class="crown"></div></div>
-  <div class="row silver" data-row="silver"><div class="crown"></div></div>
-  <div class="row bronze" data-row="bronze"><div class="crown"></div></div>
+
+<!-- Gold Row -->
+<div class="row gold">
+    <img class="crown" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Golden_crown_icon.svg/1024px-Golden_crown_icon.svg.png" alt="Crown">
+    <img class="logo" src="https://static.www.nfl.com/t_q-best/league/api/clubs/logos/DAL" alt="Dallas Cowboys">
+    <img class="logo" src="https://static.www.nfl.com/t_q-best/league/api/clubs/logos/NE" alt="New England Patriots">
+    <img class="logo" src="https://static.www.nfl.com/t_q-best/league/api/clubs/logos/SF" alt="San Francisco 49ers">
 </div>
 
-<script>
-const TEAMS = [
-  ["ari","Cardinals","https://a.espncdn.com/i/teamlogos/nfl/500/ari.png"],
-  ["atl","Falcons","https://a.espncdn.com/i/teamlogos/nfl/500/atl.png"],
-  ["bal","Ravens","https://a.espncdn.com/i/teamlogos/nfl/500/bal.png"],
-  ["buf","Bills","https://a.espncdn.com/i/teamlogos/nfl/500/buf.png"],
-  ["car","Panthers","https://a.espncdn.com/i/teamlogos/nfl/500/car.png"],
-  ["chi","Bears","https://a.espncdn.com/i/teamlogos/nfl/500/chi.png"],
-  ["cin","Bengals","https://a.espncdn.com/i/teamlogos/nfl/500/cin.png"],
-  ["cle","Browns","https://a.espncdn.com/i/teamlogos/nfl/500/cle.png"],
-  ["dal","Cowboys","https://a.espncdn.com/i/teamlogos/nfl/500/dal.png"],
-  ["den","Broncos","https://a.espncdn.com/i/teamlogos/nfl/500/den.png"],
-  ["det","Lions","https://a.espncdn.com/i/teamlogos/nfl/500/det.png"],
-  ["gb","Packers","https://a.espncdn.com/i/teamlogos/nfl/500/gb.png"],
-  ["hou","Texans","https://a.espncdn.com/i/teamlogos/nfl/500/hou.png"],
-  ["ind","Colts","https://a.espncdn.com/i/teamlogos/nfl/500/ind.png"],
-  ["jax","Jaguars","https://a.espncdn.com/i/teamlogos/nfl/500/jax.png"],
-  ["kc","Chiefs","https://a.espncdn.com/i/teamlogos/nfl/500/kc.png"],
-  ["lar","Rams","https://a.espncdn.com/i/teamlogos/nfl/500/lar.png"],
-  ["lac","Chargers","https://a.espncdn.com/i/teamlogos/nfl/500/lac.png"],
-  ["lv","Raiders","https://a.espncdn.com/i/teamlogos/nfl/500/lv.png"],
-  ["mia","Dolphins","https://a.espncdn.com/i/teamlogos/nfl/500/mia.png"],
-  ["min","Vikings","https://a.espncdn.com/i/teamlogos/nfl/500/min.png"],
-  ["ne","Patriots","https://a.espncdn.com/i/teamlogos/nfl/500/ne.png"],
-  ["no","Saints","https://a.espncdn.com/i/teamlogos/nfl/500/no.png"],
-  ["nyg","Giants","https://a.espncdn.com/i/teamlogos/nfl/500/nyg.png"],
-  ["nyj","Jets","https://a.espncdn.com/i/teamlogos/nfl/500/nyj.png"],
-  ["
+<!-- Silver Row -->
+<div class="row silver">
+    <img class="crown" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Golden_crown_icon.svg/1024px-Golden_crown_icon.svg.png" alt="Crown">
+    <img class="logo" src="https://static.www.nfl.com/t_q-best/league/api/clubs/logos/GB" alt="Green Bay Packers">
+    <img class="logo" src="https://static.www.nfl.com/t_q-best/league/api/clubs/logos/PIT" alt="Pittsburgh Steelers">
+    <img class="logo" src="https://static.www.nfl.com/t_q-best/league/api/clubs/logos/CHI" alt="Chicago Bears">
+</div>
+
+<!-- Bronze Row -->
+<div class="row bronze">
+    <img class="crown" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Golden_crown_icon.svg/1024px-Golden_crown_icon.svg.png" alt="Crown">
+    <img class="logo" src="https://static.www.nfl.com/t_q-best/league/api/clubs/logos/NYG" alt="New York Giants">
+    <img class="logo" src="https://static.www.nfl.com/t_q-best/league/api/clubs/logos/PHI" alt="Philadelphia Eagles">
+    <img class="logo" src="https://static.www.nfl.com/t_q-best/league/api/clubs/logos/WAS" alt="Washington Commanders">
+</div>
+
+</body>
+</html>
