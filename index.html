@@ -3,56 +3,109 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NFL Team Overlay</title>
+<title>NFL Overlay</title>
 <style>
     body {
         margin: 0;
-        background-color: black;
+        background: black;
         font-family: Arial, sans-serif;
+        color: white;
     }
     .row {
         display: flex;
         align-items: center;
         padding: 10px;
+        min-height: 60px;
     }
-    .gold { background-color: gold; }
-    .silver { background-color: silver; }
-    .bronze { background-color: peru; }
+    .gold { background: gold; }
+    .silver { background: silver; }
+    .bronze { background: peru; }
     .crown {
-        height: 40px;
+        height: 50px;
         margin-right: 10px;
     }
-    .logo {
-        height: 40px;
+    .team {
+        position: relative;
+        display: inline-block;
         margin: 0 5px;
+        cursor: grab;
+    }
+    .team img {
+        height: 50px;
+    }
+    .red-x {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 50px;
+        height: 50px;
+        background: rgba(255, 0, 0, 0.6);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        font-size: 36px;
+        font-weight: bold;
+        color: white;
+        pointer-events: none;
     }
 </style>
 </head>
 <body>
 
 <!-- Gold Row -->
-<div class="row gold">
-    <img class="crown" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Golden_crown_icon.svg/1024px-Golden_crown_icon.svg.png" alt="Crown">
-    <img class="logo" src="https://static.www.nfl.com/t_q-best/league/api/clubs/logos/DAL" alt="Dallas Cowboys">
-    <img class="logo" src="https://static.www.nfl.com/t_q-best/league/api/clubs/logos/NE" alt="New England Patriots">
-    <img class="logo" src="https://static.www.nfl.com/t_q-best/league/api/clubs/logos/SF" alt="San Francisco 49ers">
+<div class="row gold" ondrop="drop(event)" ondragover="allowDrop(event)">
+    <img class="crown" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Crown_icon.svg/512px-Crown_icon.svg.png" alt="Crown">
 </div>
 
 <!-- Silver Row -->
-<div class="row silver">
-    <img class="crown" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Golden_crown_icon.svg/1024px-Golden_crown_icon.svg.png" alt="Crown">
-    <img class="logo" src="https://static.www.nfl.com/t_q-best/league/api/clubs/logos/GB" alt="Green Bay Packers">
-    <img class="logo" src="https://static.www.nfl.com/t_q-best/league/api/clubs/logos/PIT" alt="Pittsburgh Steelers">
-    <img class="logo" src="https://static.www.nfl.com/t_q-best/league/api/clubs/logos/CHI" alt="Chicago Bears">
+<div class="row silver" ondrop="drop(event)" ondragover="allowDrop(event)">
+    <img class="crown" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Crown_icon.svg/512px-Crown_icon.svg.png" alt="Crown">
 </div>
 
 <!-- Bronze Row -->
-<div class="row bronze">
-    <img class="crown" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Golden_crown_icon.svg/1024px-Golden_crown_icon.svg.png" alt="Crown">
-    <img class="logo" src="https://static.www.nfl.com/t_q-best/league/api/clubs/logos/NYG" alt="New York Giants">
-    <img class="logo" src="https://static.www.nfl.com/t_q-best/league/api/clubs/logos/PHI" alt="Philadelphia Eagles">
-    <img class="logo" src="https://static.www.nfl.com/t_q-best/league/api/clubs/logos/WAS" alt="Washington Commanders">
+<div class="row bronze" ondrop="drop(event)" ondragover="allowDrop(event)">
+    <img class="crown" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Crown_icon.svg/512px-Crown_icon.svg.png" alt="Crown">
 </div>
 
-</body>
-</html>
+<script>
+const teams = [
+    "ARI","ATL","BAL","BUF","CAR","CHI","CIN","CLE",
+    "DAL","DEN","DET","GB","HOU","IND","JAX","KC",
+    "LV","LAC","LAR","MIA","MIN","NE","NO","NYG",
+    "NYJ","PHI","PIT","SF","SEA","TB","TEN","WAS"
+];
+
+// Distribute teams evenly into 3 rows
+window.onload = function() {
+    const rows = document.querySelectorAll('.row');
+    let i = 0;
+    teams.forEach(team => {
+        const div = document.createElement('div');
+        div.className = "team";
+        div.draggable = true;
+        div.ondragstart = drag;
+        div.onclick = toggleX;
+        div.innerHTML = `
+            <img src="https://static.www.nfl.com/t_q-best/league/api/clubs/logos/${team}" alt="${team}">
+            <div class="red-x">X</div>
+        `;
+        rows[i % 3].appendChild(div);
+        i++;
+    });
+}
+
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.closest('.team').outerHTML);
+    ev.dataTransfer.effectAllowed = "move";
+    ev.target.closest('.team').remove();
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    const data = ev.dataTransfer.getData("text");
+    ev.target.closest('.row').insertAdjacentHTML('beforeend', data);
+    const last = ev.target.closest('.row
