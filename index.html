@@ -1,145 +1,272 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>NFL Team Overlay</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>NFL 3-Bar Overlay with Gold/Silver/Bronze Crowns</title>
 <style>
-    body {
-        background-color: transparent;
-        margin: 0;
-        font-family: sans-serif;
-    }
-    .bar {
-        display: flex;
-        align-items: center;
-        padding: 5px 0;
-        position: relative;
-    }
-    .gold { background-color: gold; }
-    .silver { background-color: silver; }
-    .bronze { background-color: #cd7f32; }
+  :root {
+    --bar-height: 84px;
+    --logo-height: 64px;
+    --gap: 12px;
+  }
+  html, body {
+    margin: 0;
+    background: transparent;
+    font-family: system-ui, Arial, sans-serif;
+    user-select: none;
+    overflow: hidden;
+  }
+  .wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 8px;
+  }
+  .bar {
+    position: relative;
+    height: var(--bar-height);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    box-shadow: 0 6px 22px rgba(0, 0, 0, .25) inset, 0 2px 6px rgba(0, 0, 0, .18);
+  }
+  .gold { background: linear-gradient(180deg, #f7d774, #caa236); }
+  .silver { background: linear-gradient(180deg, #e6e8ec, #bfc4cc); }
+  .bronze { background: linear-gradient(180deg, #e1b07a, #b6804d); }
 
-    .crown {
-        width: 50px;
-        height: 50px;
-        flex-shrink: 0;
-        margin-left: 10px;
-    }
-    .team-container {
-        display: flex;
-        justify-content: center;
-        flex: 1;
-        flex-wrap: wrap;
-        gap: 15px;
-    }
-    .team {
-        position: relative;
-        cursor: pointer;
-        width: 60px;
-        height: 60px;
-    }
-    .team img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-    }
-    .red-x {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(255,0,0,0.4);
-        display: none;
-        align-items: center;
-        justify-content: center;
-        font-size: 60px;
-        font-weight: bold;
-        color: red;
-        line-height: 0;
-        pointer-events: none;
-    }
+  .crown {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: calc(var(--bar-height) - 28px);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .35));
+    pointer-events: none;
+  }
+  .lane-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+  .lane {
+    display: flex;
+    align-items: center;
+    gap: var(--gap);
+    height: 100%;
+  }
+
+  .logo {
+    position: relative;
+    height: var(--logo-height);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 8px;
+    border-radius: 10px;
+    background: rgba(255,255,255,.18);
+    backdrop-filter: blur(2px);
+    cursor: grab;
+    transition: transform .08s ease;
+  }
+  .logo:active {
+    cursor: grabbing;
+    transform: scale(1.03);
+  }
+  .logo img {
+    height: 100%;
+    width: auto;
+    display: block;
+  }
+
+  .logo.crossed::before,
+  .logo.crossed::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 85%;
+    height: 6px;
+    background: red;
+    transform-origin: center;
+    pointer-events: none;
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, .6));
+  }
+  .logo.crossed::before { transform: translate(-50%, -50%) rotate(45deg); }
+  .logo.crossed::after { transform: translate(-50%, -50%) rotate(-45deg); }
+
+  .drop-hint {
+    outline: 3px dashed rgba(255,255,255,.75);
+    border-radius: 12px;
+  }
+
+  @media (max-width: 900px) {
+    :root { --bar-height: 72px; --logo-height: 54px; --gap: 10px; }
+  }
+  @media (max-width: 700px) {
+    :root { --bar-height: 64px; --logo-height: 46px; --gap: 8px; }
+  }
 </style>
 </head>
 <body>
-
-<div class="bar gold">
-    <img class="crown" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Gold_crown_icon.svg/1024px-Gold_crown_icon.svg.png" alt="Crown">
-    <div class="team-container" id="bar1"></div>
-</div>
-
-<div class="bar silver">
-    <img class="crown" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Silver_crown_icon.svg/1024px-Silver_crown_icon.svg.png" alt="Crown">
-    <div class="team-container" id="bar2"></div>
-</div>
-
-<div class="bar bronze">
-    <img class="crown" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Bronze_crown_icon.svg/1024px-Bronze_crown_icon.svg.png" alt="Crown">
-    <div class="team-container" id="bar3"></div>
+<div class="wrap" id="wrap">
+  <div class="bar gold" data-lane="gold">
+    <img class="crown" alt="" src="https://raw.githubusercontent.com/yourusername/yourrepo/main/crown_gold.png">
+    <div class="lane-wrapper"><div class="lane" id="lane-gold"></div></div>
+  </div>
+  <div class="bar silver" data-lane="silver">
+    <img class="crown" alt="" src="https://raw.githubusercontent.com/yourusername/yourrepo/main/crown_silver.png">
+    <div class="lane-wrapper"><div class="lane" id="lane-silver"></div></div>
+  </div>
+  <div class="bar bronze" data-lane="bronze">
+    <img class="crown" alt="" src="https://raw.githubusercontent.com/yourusername/yourrepo/main/crown_bronze.png">
+    <div class="lane-wrapper"><div class="lane" id="lane-bronze"></div></div>
+  </div>
 </div>
 
 <script>
-const nflTeams = [
-    "https://upload.wikimedia.org/wikipedia/en/5/5c/Dallas_Cowboys.svg",
-    "https://upload.wikimedia.org/wikipedia/en/7/71/New_England_Patriots_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/a/a0/New_York_Giants_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/6/64/Green_Bay_Packers_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/f/f1/Chicago_Bears_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/5/5d/Kansas_City_Chiefs_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/c/c9/San_Francisco_49ers_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/1/16/Denver_Broncos_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/f/fc/Miami_Dolphins_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/2/26/Las_Vegas_Raiders_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/1/14/Los_Angeles_Rams_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/8/8e/Philadelphia_Eagles_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/7/7c/Buffalo_Bills_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/9/9b/Minnesota_Vikings_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/9/97/New_Orleans_Saints_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/0/0c/Seattle_Seahawks_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/1/1c/Tennessee_Titans_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/6/6b/Baltimore_Ravens_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/5/5c/Atlanta_Falcons_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/5/5f/Washington_Commanders_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/7/7e/Detroit_Lions_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/9/9d/Indianapolis_Colts_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/d/d3/Houston_Texans_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/a/a6/Los_Angeles_Chargers_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/0/01/Cincinnati_Bengals_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/d/d3/Cleveland_Browns_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/4/48/Carolina_Panthers_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/0/0b/Jacksonville_Jaguars_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/4/44/Arizona_Cardinals_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/2/28/New_York_Jets_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/7/74/Tampa_Bay_Buccaneers_logo.svg",
-    "https://upload.wikimedia.org/wikipedia/en/4/4d/Pittsburgh_Steelers_logo.svg"
+const TEAMS = [
+  ["ARI","https://a.espncdn.com/i/teamlogos/nfl/500/ari.png"],
+  ["ATL","https://a.espncdn.com/i/teamlogos/nfl/500/atl.png"],
+  ["BAL","https://a.espncdn.com/i/teamlogos/nfl/500/bal.png"],
+  ["BUF","https://a.espncdn.com/i/teamlogos/nfl/500/buf.png"],
+  ["CAR","https://a.espncdn.com/i/teamlogos/nfl/500/car.png"],
+  ["CHI","https://a.espncdn.com/i/teamlogos/nfl/500/chi.png"],
+  ["CIN","https://a.espncdn.com/i/teamlogos/nfl/500/cin.png"],
+  ["CLE","https://a.espncdn.com/i/teamlogos/nfl/500/cle.png"],
+  ["DAL","https://a.espncdn.com/i/teamlogos/nfl/500/dal.png"],
+  ["DEN","https://a.espncdn.com/i/teamlogos/nfl/500/den.png"],
+  ["DET","https://a.espncdn.com/i/teamlogos/nfl/500/det.png"],
+  ["GB","https://a.espncdn.com/i/teamlogos/nfl/500/gb.png"],
+  ["HOU","https://a.espncdn.com/i/teamlogos/nfl/500/hou.png"],
+  ["IND","https://a.espncdn.com/i/teamlogos/nfl/500/ind.png"],
+  ["JAX","https://a.espncdn.com/i/teamlogos/nfl/500/jax.png"],
+  ["KC","https://a.espncdn.com/i/teamlogos/nfl/500/kc.png"],
+  ["LV","https://a.espncdn.com/i/teamlogos/nfl/500/lv.png"],
+  ["LAC","https://a.espncdn.com/i/teamlogos/nfl/500/lac.png"],
+  ["LAR","https://a.espncdn.com/i/teamlogos/nfl/500/lar.png"],
+  ["MIA","https://a.espncdn.com/i/teamlogos/nfl/500/mia.png"],
+  ["MIN","https://a.espncdn.com/i/teamlogos/nfl/500/min.png"],
+  ["NE","https://a.espncdn.com/i/teamlogos/nfl/500/ne.png"],
+  ["NO","https://a.espncdn.com/i/teamlogos/nfl/500/no.png"],
+  ["NYG","https://a.espncdn.com/i/teamlogos/nfl/500/nyg.png"],
+  ["NYJ","https://a.espncdn.com/i/teamlogos/nfl/500/nyj.png"],
+  ["PHI","https://a.espncdn.com/i/teamlogos/nfl/500/phi.png"],
+  ["PIT","https://a.espncdn.com/i/teamlogos/nfl/500/pit.png"],
+  ["SF","https://a.espncdn.com/i/teamlogos/nfl/500/sf.png"],
+  ["SEA","https://a.espncdn.com/i/teamlogos/nfl/500/sea.png"],
+  ["TB","https://a.espncdn.com/i/teamlogos/nfl/500/tb.png"],
+  ["TEN","https://a.espncdn.com/i/teamlogos/nfl/500/ten.png"],
+  ["WSH","https://a.espncdn.com/i/teamlogos/nfl/500/wsh.png"],
 ];
 
-function createTeamElement(logoUrl) {
-    const div = document.createElement('div');
-    div.className = 'team';
-    const img = document.createElement('img');
-    img.src = logoUrl;
-    const x = document.createElement('div');
-    x.className = 'red-x';
-    x.textContent = 'X';
-    div.appendChild(img);
-    div.appendChild(x);
+const byId = id => document.getElementById(id);
+const lanes = { gold: byId("lane-gold"), silver: byId("lane-silver"), bronze: byId("lane-bronze") };
+const STORAGE_KEY = "nfl_three_bar_layout_with_crowns";
 
-    div.addEventListener('click', () => {
-        x.style.display = (x.style.display === 'flex') ? 'none' : 'flex';
-    });
-    return div;
+function makeLogo(teamCode, url) {
+  const el = document.createElement("div");
+  el.className = "logo";
+  el.draggable = true;
+  el.dataset.team = teamCode;
+  el.innerHTML = `<img alt="${teamCode}" src="${url}" />`;
+  el.addEventListener("click", () => {
+    if (dragState.dragging) return;
+    el.classList.toggle("crossed");
+    saveLayout();
+  });
+  el.addEventListener("dragstart", e => {
+    dragState.dragging = el;
+    e.dataTransfer.setData("text/plain", teamCode);
+    e.dataTransfer.effectAllowed = "move";
+    requestAnimationFrame(() => el.classList.add("dragging"));
+  });
+  el.addEventListener("dragend", () => {
+    dragState.dragging = null;
+    el.classList.remove("dragging");
+    document.querySelectorAll(".drop-hint").forEach(n => n.classList.remove("drop-hint"));
+    saveLayout();
+  });
+  return el;
 }
 
-const teamsPerBar = Math.ceil(nflTeams.length / 3);
-const bar1 = document.getElementById('bar1');
-const bar2 = document.getElementById('bar2');
-const bar3 = document.getElementById('bar3');
+function positionForInsertion(container, clientX) {
+  const siblings = [...container.querySelectorAll(".logo:not(.dragging)")];
+  let afterNode = null;
+  for (const sib of siblings) {
+    const rect = sib.getBoundingClientRect();
+    const midpoint = rect.left + rect.width / 2;
+    if (clientX > midpoint) afterNode = sib;
+  }
+  return afterNode;
+}
 
-nflTeams.slice(0, teamsPerBar).forEach(team => bar1.appendChild(createTeamElement(team)));
-nflTeams.slice(teamsPerBar, teamsPerBar*2).forEach(team => bar2.appendChild(createTeamElement(team)));
-nflTeams.slice(teamsPerBar*2).forEach(team => bar3.appendChild(createTeamElement(team)));
+const dragState = { dragging: null };
+Object.values(lanes).forEach(laneEl => {
+  ["dragover", "dragenter"].forEach(ev => {
+    laneEl.addEventListener(ev, e => {
+      e.preventDefault();
+      const after = positionForInsertion(laneEl, e.clientX);
+      laneEl.querySelectorAll(".logo").forEach(n => n.classList.remove("drop-hint"));
+      if (after) after.classList.add("drop-hint");
+    });
+  });
+  laneEl.addEventListener("dragleave", () => {
+    laneEl.querySelectorAll(".logo").forEach(n => n.classList.remove("drop-hint"));
+  });
+  laneEl.addEventListener("drop", e => {
+    e.preventDefault();
+    const dragged = dragState.dragging;
+    if (!dragged) return;
+    const after = positionForInsertion(laneEl, e.clientX);
+    if (after) after.after(dragged);
+    else laneEl.appendChild(dragged);
+    laneEl.querySelectorAll(".logo").forEach(n => n.classList.remove("drop-hint"));
+  });
+});
+
+function initialLayout() {
+  const G = TEAMS.slice(0, 11);
+  const S = TEAMS.slice(11, 22);
+  const B = TEAMS.slice(22);
+  G.forEach(([t,u]) => lanes.gold.appendChild(makeLogo(t,u)));
+  S.forEach(([t,u]) => lanes.silver.appendChild(makeLogo(t,u)));
+  B.forEach(([t,u]) => lanes.bronze.appendChild(makeLogo(t,u)));
+}
+
+function saveLayout() {
+  const data = {};
+  Object.entries(lanes).forEach(([laneName, laneEl]) => {
+    data[laneName] = [...laneEl.querySelectorAll(".logo")].map(el => ({
+      team: el.dataset.team,
+      x: el.classList.contains("crossed") ? 1 : 0
+    }));
+  });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function loadLayout() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+    const data = JSON.parse(raw);
+    const urlByTeam = Object.fromEntries(TEAMS);
+    Object.entries(data).forEach(([laneName, items]) => {
+      items.forEach(item => {
+        const el = makeLogo(item.team, urlByTeam[item.team]);
+        if (item.x) el.classList.add("crossed");
+        lanes[laneName].appendChild(el);
+      });
+    });
+    return true;
+  } catch (e) {
+    console.warn(e);
+    return false;
+  }
+}
+
+if (!loadLayout()) initialLayout();
 </script>
-
 </body>
 </html>
