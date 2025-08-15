@@ -3,129 +3,140 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>NFL 3-Bar Overlay with Gold/Silver/Bronze Crowns</title>
+<title>NFL 3-Bar Overlay (Drag, Centered, Persistent)</title>
 <style>
-  :root {
-    --bar-height: 84px;
-    --logo-height: 64px;
-    --gap: 12px;
+  :root{
+    --bar-height: 84px; /* overall bar height */
+    --logo-height: 64px; /* team logo size */
+    --gap: 12px; /* spacing between logos */
   }
-  html, body {
-    margin: 0;
-    background: transparent;
+  html,body{
+    margin:0;
+    background:transparent; /* so OBS scene shows through */
     font-family: system-ui, Arial, sans-serif;
-    user-select: none;
-    overflow: hidden;
-  }
-  .wrap {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 8px;
-  }
-  .bar {
-    position: relative;
-    height: var(--bar-height);
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-    box-shadow: 0 6px 22px rgba(0, 0, 0, .25) inset, 0 2px 6px rgba(0, 0, 0, .18);
-  }
-  .gold { background: linear-gradient(180deg, #f7d774, #caa236); }
-  .silver { background: linear-gradient(180deg, #e6e8ec, #bfc4cc); }
-  .bronze { background: linear-gradient(180deg, #e1b07a, #b6804d); }
-
-  .crown {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    height: calc(var(--bar-height) - 28px);
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .35));
-    pointer-events: none;
-  }
-  .lane-wrapper {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-  }
-  .lane {
-    display: flex;
-    align-items: center;
-    gap: var(--gap);
-    height: 100%;
+    user-select:none;
+    overflow:hidden;
   }
 
-  .logo {
-    position: relative;
-    height: var(--logo-height);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 6px 8px;
-    border-radius: 10px;
+  .wrap{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    padding:8px;
+  }
+
+  /* Bars */
+  .bar{
+    position:relative;
+    height:var(--bar-height);
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    overflow:hidden;
+    box-shadow: 0 6px 22px rgba(0,0,0,.25) inset, 0 2px 6px rgba(0,0,0,.18);
+  }
+  .gold { background: linear-gradient(180deg,#f7d774,#caa236); }
+  .silver { background: linear-gradient(180deg,#e6e8ec,#bfc4cc); }
+  .bronze { background: linear-gradient(180deg,#e1b07a,#b6804d); }
+
+  /* Crowns (left), tinted via CSS but same source PNG for reliability */
+  .crown{
+    position:absolute;
+    left:14px; top:50%;
+    transform:translateY(-50%);
+    height:calc(var(--bar-height) - 28px);
+    pointer-events:none;
+  }
+  .crown-gold { filter: drop-shadow(0 2px 4px rgba(0,0,0,.35)); }
+  .crown-silver { filter: drop-shadow(0 2px 4px rgba(0,0,0,.35)) grayscale(1) brightness(1.35); }
+  .crown-bronze { filter: drop-shadow(0 2px 4px rgba(0,0,0,.35)) sepia(1) saturate(2.2) hue-rotate(-20deg) brightness(0.95); }
+
+  /* Center the logos as a group, ignoring the crown width */
+  .lane-wrapper{
+    flex:1;
+    display:flex;
+    justify-content:center; /* makes the group centered */
+  }
+  .lane{
+    display:flex;
+    align-items:center;
+    gap:var(--gap);
+    height:100%;
+  }
+
+  /* Draggable logo chip */
+  .logo{
+    position:relative;
+    height:var(--logo-height);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:6px 8px;
+    border-radius:10px;
     background: rgba(255,255,255,.18);
     backdrop-filter: blur(2px);
-    cursor: grab;
+    cursor:grab;
     transition: transform .08s ease;
   }
-  .logo:active {
-    cursor: grabbing;
-    transform: scale(1.03);
-  }
-  .logo img {
-    height: 100%;
-    width: auto;
-    display: block;
-  }
+  .logo:active{ cursor:grabbing; transform:scale(1.03); }
+  .logo img{ height:100%; width:auto; display:block; }
 
+  /* Perfect, thicker centered red X (kept exactly as you liked it) */
   .logo.crossed::before,
-  .logo.crossed::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 85%;
-    height: 6px;
-    background: red;
-    transform-origin: center;
-    pointer-events: none;
-    filter: drop-shadow(0 0 2px rgba(0, 0, 0, .6));
+  .logo.crossed::after{
+    content:"";
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:85%;
+    height:6px; /* thickness */
+    background:red;
+    transform-origin:center;
+    pointer-events:none;
+    filter: drop-shadow(0 0 2px rgba(0,0,0,.6));
   }
-  .logo.crossed::before { transform: translate(-50%, -50%) rotate(45deg); }
+  .logo.crossed::before{ transform: translate(-50%, -50%) rotate(45deg); }
   .logo.crossed::after { transform: translate(-50%, -50%) rotate(-45deg); }
 
-  .drop-hint {
+  .drop-hint{
     outline: 3px dashed rgba(255,255,255,.75);
     border-radius: 12px;
   }
 
-  @media (max-width: 900px) {
-    :root { --bar-height: 72px; --logo-height: 54px; --gap: 10px; }
+  @media (max-width: 900px){
+    :root{ --bar-height:72px; --logo-height:54px; --gap:10px; }
   }
-  @media (max-width: 700px) {
-    :root { --bar-height: 64px; --logo-height: 46px; --gap: 8px; }
+  @media (max-width: 700px){
+    :root{ --bar-height:64px; --logo-height:46px; --gap:8px; }
   }
 </style>
 </head>
 <body>
 <div class="wrap" id="wrap">
+  <!-- GOLD -->
   <div class="bar gold" data-lane="gold">
-    <img class="crown" alt="" src="https://raw.githubusercontent.com/yourusername/yourrepo/main/crown_gold.png">
+    <img class="crown crown-gold" alt="Crown"
+      src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f451.png">
     <div class="lane-wrapper"><div class="lane" id="lane-gold"></div></div>
   </div>
+
+  <!-- SILVER -->
   <div class="bar silver" data-lane="silver">
-    <img class="crown" alt="" src="https://raw.githubusercontent.com/yourusername/yourrepo/main/crown_silver.png">
+    <img class="crown crown-silver" alt="Crown"
+      src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f451.png">
     <div class="lane-wrapper"><div class="lane" id="lane-silver"></div></div>
   </div>
+
+  <!-- BRONZE -->
   <div class="bar bronze" data-lane="bronze">
-    <img class="crown" alt="" src="https://raw.githubusercontent.com/yourusername/yourrepo/main/crown_bronze.png">
+    <img class="crown crown-bronze" alt="Crown"
+      src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f451.png">
     <div class="lane-wrapper"><div class="lane" id="lane-bronze"></div></div>
   </div>
 </div>
 
 <script>
+/* ========= Team -> logo URL (ESPN PNGs) ========= */
 const TEAMS = [
   ["ARI","https://a.espncdn.com/i/teamlogos/nfl/500/ari.png"],
   ["ATL","https://a.espncdn.com/i/teamlogos/nfl/500/atl.png"],
@@ -138,134 +149,141 @@ const TEAMS = [
   ["DAL","https://a.espncdn.com/i/teamlogos/nfl/500/dal.png"],
   ["DEN","https://a.espncdn.com/i/teamlogos/nfl/500/den.png"],
   ["DET","https://a.espncdn.com/i/teamlogos/nfl/500/det.png"],
-  ["GB","https://a.espncdn.com/i/teamlogos/nfl/500/gb.png"],
+  ["GB" , "https://a.espncdn.com/i/teamlogos/nfl/500/gb.png"],
   ["HOU","https://a.espncdn.com/i/teamlogos/nfl/500/hou.png"],
   ["IND","https://a.espncdn.com/i/teamlogos/nfl/500/ind.png"],
   ["JAX","https://a.espncdn.com/i/teamlogos/nfl/500/jax.png"],
-  ["KC","https://a.espncdn.com/i/teamlogos/nfl/500/kc.png"],
-  ["LV","https://a.espncdn.com/i/teamlogos/nfl/500/lv.png"],
+  ["KC" ,"https://a.espncdn.com/i/teamlogos/nfl/500/kc.png"],
+  ["LV" ,"https://a.espncdn.com/i/teamlogos/nfl/500/lv.png"],
   ["LAC","https://a.espncdn.com/i/teamlogos/nfl/500/lac.png"],
   ["LAR","https://a.espncdn.com/i/teamlogos/nfl/500/lar.png"],
   ["MIA","https://a.espncdn.com/i/teamlogos/nfl/500/mia.png"],
   ["MIN","https://a.espncdn.com/i/teamlogos/nfl/500/min.png"],
-  ["NE","https://a.espncdn.com/i/teamlogos/nfl/500/ne.png"],
-  ["NO","https://a.espncdn.com/i/teamlogos/nfl/500/no.png"],
+  ["NE" ,"https://a.espncdn.com/i/teamlogos/nfl/500/ne.png"],
+  ["NO" ,"https://a.espncdn.com/i/teamlogos/nfl/500/no.png"],
   ["NYG","https://a.espncdn.com/i/teamlogos/nfl/500/nyg.png"],
   ["NYJ","https://a.espncdn.com/i/teamlogos/nfl/500/nyj.png"],
   ["PHI","https://a.espncdn.com/i/teamlogos/nfl/500/phi.png"],
   ["PIT","https://a.espncdn.com/i/teamlogos/nfl/500/pit.png"],
-  ["SF","https://a.espncdn.com/i/teamlogos/nfl/500/sf.png"],
+  ["SF" ,"https://a.espncdn.com/i/teamlogos/nfl/500/sf.png"],
   ["SEA","https://a.espncdn.com/i/teamlogos/nfl/500/sea.png"],
-  ["TB","https://a.espncdn.com/i/teamlogos/nfl/500/tb.png"],
+  ["TB" ,"https://a.espncdn.com/i/teamlogos/nfl/500/tb.png"],
   ["TEN","https://a.espncdn.com/i/teamlogos/nfl/500/ten.png"],
   ["WSH","https://a.espncdn.com/i/teamlogos/nfl/500/wsh.png"],
 ];
 
+/* ========= Utils & elements ========= */
 const byId = id => document.getElementById(id);
 const lanes = { gold: byId("lane-gold"), silver: byId("lane-silver"), bronze: byId("lane-bronze") };
-const STORAGE_KEY = "nfl_three_bar_layout_with_crowns";
+const STORAGE_KEY = "nfl_three_bar_layout_v4"; // keep stable to preserve positions
 
-function makeLogo(teamCode, url) {
+function makeLogo(teamCode, url){
   const el = document.createElement("div");
   el.className = "logo";
   el.draggable = true;
   el.dataset.team = teamCode;
   el.innerHTML = `<img alt="${teamCode}" src="${url}" />`;
-  el.addEventListener("click", () => {
+
+  // Toggle red X on click (kept as-is)
+  el.addEventListener("click", ()=>{
     if (dragState.dragging) return;
     el.classList.toggle("crossed");
     saveLayout();
   });
-  el.addEventListener("dragstart", e => {
+
+  // Drag logic
+  el.addEventListener("dragstart",(e)=>{
     dragState.dragging = el;
     e.dataTransfer.setData("text/plain", teamCode);
     e.dataTransfer.effectAllowed = "move";
-    requestAnimationFrame(() => el.classList.add("dragging"));
+    requestAnimationFrame(()=> el.classList.add("dragging"));
   });
-  el.addEventListener("dragend", () => {
+  el.addEventListener("dragend",()=>{
     dragState.dragging = null;
     el.classList.remove("dragging");
-    document.querySelectorAll(".drop-hint").forEach(n => n.classList.remove("drop-hint"));
+    document.querySelectorAll(".drop-hint").forEach(n=>n.classList.remove("drop-hint"));
     saveLayout();
   });
+
   return el;
 }
 
-function positionForInsertion(container, clientX) {
+function positionForInsertion(container, clientX){
   const siblings = [...container.querySelectorAll(".logo:not(.dragging)")];
   let afterNode = null;
-  for (const sib of siblings) {
+  for (const sib of siblings){
     const rect = sib.getBoundingClientRect();
-    const midpoint = rect.left + rect.width / 2;
+    const midpoint = rect.left + rect.width/2;
     if (clientX > midpoint) afterNode = sib;
   }
   return afterNode;
 }
 
-const dragState = { dragging: null };
-Object.values(lanes).forEach(laneEl => {
-  ["dragover", "dragenter"].forEach(ev => {
-    laneEl.addEventListener(ev, e => {
+const dragState = { dragging:null };
+
+for (const laneEl of Object.values(lanes)){
+  ["dragover","dragenter"].forEach(ev=>{
+    laneEl.addEventListener(ev, (e)=>{
       e.preventDefault();
       const after = positionForInsertion(laneEl, e.clientX);
-      laneEl.querySelectorAll(".logo").forEach(n => n.classList.remove("drop-hint"));
+      laneEl.querySelectorAll(".logo").forEach(n=>n.classList.remove("drop-hint"));
       if (after) after.classList.add("drop-hint");
     });
   });
-  laneEl.addEventListener("dragleave", () => {
-    laneEl.querySelectorAll(".logo").forEach(n => n.classList.remove("drop-hint"));
+  laneEl.addEventListener("dragleave", ()=> {
+    laneEl.querySelectorAll(".logo").forEach(n=>n.classList.remove("drop-hint"));
   });
-  laneEl.addEventListener("drop", e => {
+  laneEl.addEventListener("drop",(e)=>{
     e.preventDefault();
     const dragged = dragState.dragging;
-    if (!dragged) return;
+    if(!dragged) return;
     const after = positionForInsertion(laneEl, e.clientX);
-    if (after) after.after(dragged);
-    else laneEl.appendChild(dragged);
-    laneEl.querySelectorAll(".logo").forEach(n => n.classList.remove("drop-hint"));
+    if (after) after.after(dragged); else laneEl.appendChild(dragged);
+    laneEl.querySelectorAll(".logo").forEach(n=>n.classList.remove("drop-hint"));
+    saveLayout();
   });
-});
-
-function initialLayout() {
-  const G = TEAMS.slice(0, 11);
-  const S = TEAMS.slice(11, 22);
-  const B = TEAMS.slice(22);
-  G.forEach(([t,u]) => lanes.gold.appendChild(makeLogo(t,u)));
-  S.forEach(([t,u]) => lanes.silver.appendChild(makeLogo(t,u)));
-  B.forEach(([t,u]) => lanes.bronze.appendChild(makeLogo(t,u)));
 }
 
-function saveLayout() {
+/* ========= Initial placement (even split 11/11/10) ========= */
+function initialLayout(){
+  const G = TEAMS.slice(0,11);
+  const S = TEAMS.slice(11,22);
+  const B = TEAMS.slice(22);
+  for (const [t,u] of G) lanes.gold.appendChild(makeLogo(t,u));
+  for (const [t,u] of S) lanes.silver.appendChild(makeLogo(t,u));
+  for (const [t,u] of B) lanes.bronze.appendChild(makeLogo(t,u));
+}
+
+/* ========= Save/Load layout (keeps teams where you put them) ========= */
+function saveLayout(){
   const data = {};
-  Object.entries(lanes).forEach(([laneName, laneEl]) => {
-    data[laneName] = [...laneEl.querySelectorAll(".logo")].map(el => ({
+  for (const [laneName, laneEl] of Object.entries(lanes)){
+    data[laneName] = [...laneEl.querySelectorAll(".logo")].map(el=>({
       team: el.dataset.team,
       x: el.classList.contains("crossed") ? 1 : 0
     }));
-  });
+  }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
-function loadLayout() {
-  try {
+function loadLayout(){
+  try{
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return false;
+    if(!raw) return false;
     const data = JSON.parse(raw);
     const urlByTeam = Object.fromEntries(TEAMS);
-    Object.entries(data).forEach(([laneName, items]) => {
-      items.forEach(item => {
+    for (const [laneName, items] of Object.entries(data)){
+      for (const item of items){
         const el = makeLogo(item.team, urlByTeam[item.team]);
         if (item.x) el.classList.add("crossed");
         lanes[laneName].appendChild(el);
-      });
-    });
+      }
+    }
     return true;
-  } catch (e) {
-    console.warn(e);
-    return false;
-  }
+  }catch(e){ console.warn(e); return false; }
 }
 
+/* Boot */
 if (!loadLayout()) initialLayout();
 </script>
 </body>
