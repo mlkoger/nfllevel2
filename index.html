@@ -1,91 +1,272 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NFL Overlay</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>NFL 3-Bar Overlay with Gold/Silver/Bronze Crowns</title>
 <style>
-    body {
-        background: transparent;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-    }
-    .bar {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 95%;
-        padding: 10px;
-        gap: 10px;
-        border-radius: 10px;
-    }
-    .gold { background-color: gold; }
-    .silver { background-color: silver; }
-    .bronze { background-color: #cd7f32; }
+  :root {
+    --bar-height: 84px;
+    --logo-height: 64px;
+    --gap: 12px;
+  }
+  html, body {
+    margin: 0;
+    background: transparent;
+    font-family: system-ui, Arial, sans-serif;
+    user-select: none;
+    overflow: hidden;
+  }
+  .wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 8px;
+  }
+  .bar {
+    position: relative;
+    height: var(--bar-height);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    box-shadow: 0 6px 22px rgba(0, 0, 0, .25) inset, 0 2px 6px rgba(0, 0, 0, .18);
+  }
+  .gold { background: linear-gradient(180deg, #f7d774, #caa236); }
+  .silver { background: linear-gradient(180deg, #e6e8ec, #bfc4cc); }
+  .bronze { background: linear-gradient(180deg, #e1b07a, #b6804d); }
 
-    .crown {
-        width: 50px;
-        height: 50px;
-        flex-shrink: 0;
-    }
-    .logo {
-        width: 60px;
-        height: 60px;
-        position: relative;
-        cursor: pointer;
-    }
-    .logo img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-    }
-    .x {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 70%;
-        height: 70%;
-        background-color: rgba(255, 0, 0, 0.7);
-        clip-path: polygon(0 20%, 20% 0, 50% 30%, 80% 0, 100% 20%, 70% 50%, 100% 80%, 80% 100%, 50% 70%, 20% 100%, 0 80%, 30% 50%);
-        transform: translate(-50%, -50%);
-        display: none;
-    }
+  .crown {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: calc(var(--bar-height) - 28px);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .35));
+    pointer-events: none;
+  }
+  .lane-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+  .lane {
+    display: flex;
+    align-items: center;
+    gap: var(--gap);
+    height: 100%;
+  }
+
+  .logo {
+    position: relative;
+    height: var(--logo-height);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 8px;
+    border-radius: 10px;
+    background: rgba(255,255,255,.18);
+    backdrop-filter: blur(2px);
+    cursor: grab;
+    transition: transform .08s ease;
+  }
+  .logo:active {
+    cursor: grabbing;
+    transform: scale(1.03);
+  }
+  .logo img {
+    height: 100%;
+    width: auto;
+    display: block;
+  }
+
+  .logo.crossed::before,
+  .logo.crossed::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 85%;
+    height: 6px;
+    background: red;
+    transform-origin: center;
+    pointer-events: none;
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, .6));
+  }
+  .logo.crossed::before { transform: translate(-50%, -50%) rotate(45deg); }
+  .logo.crossed::after { transform: translate(-50%, -50%) rotate(-45deg); }
+
+  .drop-hint {
+    outline: 3px dashed rgba(255,255,255,.75);
+    border-radius: 12px;
+  }
+
+  @media (max-width: 900px) {
+    :root { --bar-height: 72px; --logo-height: 54px; --gap: 10px; }
+  }
+  @media (max-width: 700px) {
+    :root { --bar-height: 64px; --logo-height: 46px; --gap: 8px; }
+  }
 </style>
 </head>
 <body>
-
-<div class="bar gold">
-    <img class="crown" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Gold_crown_icon.svg/1024px-Gold_crown_icon.svg.png" alt="Gold Crown">
-    <div class="logo"><img src="https://upload.wikimedia.org/wikipedia/en/8/8e/Philadelphia_Eagles_logo.svg"><div class="x"></div></div>
-    <div class="logo"><img src="https://upload.wikimedia.org/wikipedia/en/5/5c/Dallas_Cowboys.svg"><div class="x"></div></div>
-    <div class="logo"><img src="https://upload.wikimedia.org/wikipedia/en/9/97/Green_Bay_Packers_logo.svg"><div class="x"></div></div>
-</div>
-
-<div class="bar silver">
-    <img class="crown" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Silver_crown_icon.svg/1024px-Silver_crown_icon.svg.png" alt="Silver Crown">
-    <div class="logo"><img src="https://upload.wikimedia.org/wikipedia/en/1/16/New_Orleans_Saints_logo.svg"><div class="x"></div></div>
-    <div class="logo"><img src="https://upload.wikimedia.org/wikipedia/en/2/27/San_Francisco_49ers_logo.svg"><div class="x"></div></div>
-    <div class="logo"><img src="https://upload.wikimedia.org/wikipedia/en/7/70/Kansas_City_Chiefs_logo.svg"><div class="x"></div></div>
-</div>
-
-<div class="bar bronze">
-    <img class="crown" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Bronze_crown_icon.svg/1024px-Bronze_crown_icon.svg.png" alt="Bronze Crown">
-    <div class="logo"><img src="https://upload.wikimedia.org/wikipedia/en/5/5c/Buffalo_Bills_logo.svg"><div class="x"></div></div>
-    <div class="logo"><img src="https://upload.wikimedia.org/wikipedia/en/a/a0/Miami_Dolphins_logo.svg"><div class="x"></div></div>
-    <div class="logo"><img src="https://upload.wikimedia.org/wikipedia/en/c/c5/New_York_Jets_logo.svg"><div class="x"></div></div>
+<div class="wrap" id="wrap">
+  <div class="bar gold" data-lane="gold">
+    <img class="crown" alt="" src="https://raw.githubusercontent.com/yourusername/yourrepo/main/crown_gold.png">
+    <div class="lane-wrapper"><div class="lane" id="lane-gold"></div></div>
+  </div>
+  <div class="bar silver" data-lane="silver">
+    <img class="crown" alt="" src="https://raw.githubusercontent.com/yourusername/yourrepo/main/crown_silver.png">
+    <div class="lane-wrapper"><div class="lane" id="lane-silver"></div></div>
+  </div>
+  <div class="bar bronze" data-lane="bronze">
+    <img class="crown" alt="" src="https://raw.githubusercontent.com/yourusername/yourrepo/main/crown_bronze.png">
+    <div class="lane-wrapper"><div class="lane" id="lane-bronze"></div></div>
+  </div>
 </div>
 
 <script>
-    document.querySelectorAll('.logo').forEach(logo => {
-        logo.addEventListener('click', () => {
-            const x = logo.querySelector('.x');
-            x.style.display = x.style.display === 'block' ? 'none' : 'block';
-        });
-    });
-</script>
+const TEAMS = [
+  ["ARI","https://a.espncdn.com/i/teamlogos/nfl/500/ari.png"],
+  ["ATL","https://a.espncdn.com/i/teamlogos/nfl/500/atl.png"],
+  ["BAL","https://a.espncdn.com/i/teamlogos/nfl/500/bal.png"],
+  ["BUF","https://a.espncdn.com/i/teamlogos/nfl/500/buf.png"],
+  ["CAR","https://a.espncdn.com/i/teamlogos/nfl/500/car.png"],
+  ["CHI","https://a.espncdn.com/i/teamlogos/nfl/500/chi.png"],
+  ["CIN","https://a.espncdn.com/i/teamlogos/nfl/500/cin.png"],
+  ["CLE","https://a.espncdn.com/i/teamlogos/nfl/500/cle.png"],
+  ["DAL","https://a.espncdn.com/i/teamlogos/nfl/500/dal.png"],
+  ["DEN","https://a.espncdn.com/i/teamlogos/nfl/500/den.png"],
+  ["DET","https://a.espncdn.com/i/teamlogos/nfl/500/det.png"],
+  ["GB","https://a.espncdn.com/i/teamlogos/nfl/500/gb.png"],
+  ["HOU","https://a.espncdn.com/i/teamlogos/nfl/500/hou.png"],
+  ["IND","https://a.espncdn.com/i/teamlogos/nfl/500/ind.png"],
+  ["JAX","https://a.espncdn.com/i/teamlogos/nfl/500/jax.png"],
+  ["KC","https://a.espncdn.com/i/teamlogos/nfl/500/kc.png"],
+  ["LV","https://a.espncdn.com/i/teamlogos/nfl/500/lv.png"],
+  ["LAC","https://a.espncdn.com/i/teamlogos/nfl/500/lac.png"],
+  ["LAR","https://a.espncdn.com/i/teamlogos/nfl/500/lar.png"],
+  ["MIA","https://a.espncdn.com/i/teamlogos/nfl/500/mia.png"],
+  ["MIN","https://a.espncdn.com/i/teamlogos/nfl/500/min.png"],
+  ["NE","https://a.espncdn.com/i/teamlogos/nfl/500/ne.png"],
+  ["NO","https://a.espncdn.com/i/teamlogos/nfl/500/no.png"],
+  ["NYG","https://a.espncdn.com/i/teamlogos/nfl/500/nyg.png"],
+  ["NYJ","https://a.espncdn.com/i/teamlogos/nfl/500/nyj.png"],
+  ["PHI","https://a.espncdn.com/i/teamlogos/nfl/500/phi.png"],
+  ["PIT","https://a.espncdn.com/i/teamlogos/nfl/500/pit.png"],
+  ["SF","https://a.espncdn.com/i/teamlogos/nfl/500/sf.png"],
+  ["SEA","https://a.espncdn.com/i/teamlogos/nfl/500/sea.png"],
+  ["TB","https://a.espncdn.com/i/teamlogos/nfl/500/tb.png"],
+  ["TEN","https://a.espncdn.com/i/teamlogos/nfl/500/ten.png"],
+  ["WSH","https://a.espncdn.com/i/teamlogos/nfl/500/wsh.png"],
+];
 
+const byId = id => document.getElementById(id);
+const lanes = { gold: byId("lane-gold"), silver: byId("lane-silver"), bronze: byId("lane-bronze") };
+const STORAGE_KEY = "nfl_three_bar_layout_with_crowns";
+
+function makeLogo(teamCode, url) {
+  const el = document.createElement("div");
+  el.className = "logo";
+  el.draggable = true;
+  el.dataset.team = teamCode;
+  el.innerHTML = `<img alt="${teamCode}" src="${url}" />`;
+  el.addEventListener("click", () => {
+    if (dragState.dragging) return;
+    el.classList.toggle("crossed");
+    saveLayout();
+  });
+  el.addEventListener("dragstart", e => {
+    dragState.dragging = el;
+    e.dataTransfer.setData("text/plain", teamCode);
+    e.dataTransfer.effectAllowed = "move";
+    requestAnimationFrame(() => el.classList.add("dragging"));
+  });
+  el.addEventListener("dragend", () => {
+    dragState.dragging = null;
+    el.classList.remove("dragging");
+    document.querySelectorAll(".drop-hint").forEach(n => n.classList.remove("drop-hint"));
+    saveLayout();
+  });
+  return el;
+}
+
+function positionForInsertion(container, clientX) {
+  const siblings = [...container.querySelectorAll(".logo:not(.dragging)")];
+  let afterNode = null;
+  for (const sib of siblings) {
+    const rect = sib.getBoundingClientRect();
+    const midpoint = rect.left + rect.width / 2;
+    if (clientX > midpoint) afterNode = sib;
+  }
+  return afterNode;
+}
+
+const dragState = { dragging: null };
+Object.values(lanes).forEach(laneEl => {
+  ["dragover", "dragenter"].forEach(ev => {
+    laneEl.addEventListener(ev, e => {
+      e.preventDefault();
+      const after = positionForInsertion(laneEl, e.clientX);
+      laneEl.querySelectorAll(".logo").forEach(n => n.classList.remove("drop-hint"));
+      if (after) after.classList.add("drop-hint");
+    });
+  });
+  laneEl.addEventListener("dragleave", () => {
+    laneEl.querySelectorAll(".logo").forEach(n => n.classList.remove("drop-hint"));
+  });
+  laneEl.addEventListener("drop", e => {
+    e.preventDefault();
+    const dragged = dragState.dragging;
+    if (!dragged) return;
+    const after = positionForInsertion(laneEl, e.clientX);
+    if (after) after.after(dragged);
+    else laneEl.appendChild(dragged);
+    laneEl.querySelectorAll(".logo").forEach(n => n.classList.remove("drop-hint"));
+  });
+});
+
+function initialLayout() {
+  const G = TEAMS.slice(0, 11);
+  const S = TEAMS.slice(11, 22);
+  const B = TEAMS.slice(22);
+  G.forEach(([t,u]) => lanes.gold.appendChild(makeLogo(t,u)));
+  S.forEach(([t,u]) => lanes.silver.appendChild(makeLogo(t,u)));
+  B.forEach(([t,u]) => lanes.bronze.appendChild(makeLogo(t,u)));
+}
+
+function saveLayout() {
+  const data = {};
+  Object.entries(lanes).forEach(([laneName, laneEl]) => {
+    data[laneName] = [...laneEl.querySelectorAll(".logo")].map(el => ({
+      team: el.dataset.team,
+      x: el.classList.contains("crossed") ? 1 : 0
+    }));
+  });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function loadLayout() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+    const data = JSON.parse(raw);
+    const urlByTeam = Object.fromEntries(TEAMS);
+    Object.entries(data).forEach(([laneName, items]) => {
+      items.forEach(item => {
+        const el = makeLogo(item.team, urlByTeam[item.team]);
+        if (item.x) el.classList.add("crossed");
+        lanes[laneName].appendChild(el);
+      });
+    });
+    return true;
+  } catch (e) {
+    console.warn(e);
+    return false;
+  }
+}
+
+if (!loadLayout()) initialLayout();
+</script>
 </body>
 </html>
