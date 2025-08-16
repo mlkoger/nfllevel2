@@ -12,20 +12,18 @@
     user-select: none;
   }
 
-  /* Bars behind everything */
   .bar {
     position: absolute;
     left: 0;
     width: 100%;
     height: 110px;
     border-radius: 12px;
-    z-index: 0; /* background only */
+    z-index: 0;
   }
   .gold { top: 10px; background: linear-gradient(to bottom, #ffd700, #b8860b); }
   .silver { top: 130px; background: linear-gradient(to bottom, #c0c0c0, #808080); }
   .bronze { top: 250px; background: linear-gradient(to bottom, #cd7f32, #8b4513); }
 
-  /* Crown placeholder space */
   .crown-space {
     position: absolute;
     left: 10px;
@@ -38,13 +36,12 @@
     pointer-events: none;
   }
 
-  /* Logo containers */
   .logos {
     position: absolute;
-    left: 100px; /* leave space for crown */
+    left: 100px;
     width: calc(100% - 100px);
     height: 110px;
-    z-index: 10; /* always above bars */
+    z-index: 10;
   }
   #gold-logos { top: 10px; }
   #silver-logos { top: 130px; }
@@ -54,14 +51,13 @@
     position: absolute;
     height: 90px;
     cursor: grab;
-    z-index: 15; /* ensure above everything */
+    z-index: 15;
   }
   .logo img {
     height: 100%;
     pointer-events: none;
   }
 
-  /* Red X overlay */
   .logo.crossed::before,
   .logo.crossed::after {
     content: "";
@@ -80,50 +76,96 @@
 </head>
 <body>
 
-  <!-- Bars -->
   <div class="bar gold"></div>
   <div class="bar silver"></div>
   <div class="bar bronze"></div>
 
-  <!-- Crown placeholders -->
   <div class="crown-space" style="top:65px;"></div>
   <div class="crown-space" style="top:185px;"></div>
   <div class="crown-space" style="top:305px;"></div>
 
-  <!-- Logo rows -->
   <div class="logos" id="gold-logos"></div>
   <div class="logos" id="silver-logos"></div>
   <div class="logos" id="bronze-logos"></div>
 
 <script>
-const teams = [
-  "ari","atl","bal","buf","car","chi","cin","cle",
-  "dal","den","det","gb","hou","ind","jax","kc",
-  "lv","lac","lar","mia","min","ne","no","nyg",
-  "nyj","phi","pit","sf","sea","tb","ten","wsh"
-];
+const logos = {
+  ari: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/ari.png",
+  atl: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/atl.png",
+  bal: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/bal.png",
+  buf: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/buf.png",
+  car: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/car.png",
+  chi: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/chi.png",
+  cin: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/cin.png",
+  cle: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/cle.png",
+  dal: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/dal.png",
+  den: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/den.png",
+  det: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/det.png",
+  gb: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/gb.png",
+  hou: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/hou.png",
+  ind: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/ind.png",
+  jax: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/jax.png",
+  kc: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/kc.png",
+  lv: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/lv.png",
+  lac: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/lac.png",
+  lar: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/lar.png",
+  mia: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/mia.png",
+  min: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/min.png",
+  ne: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/ne.png",
+  no: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/no.png",
+  nyg: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/nyg.png",
+  nyj: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/nyj.png",
+  phi: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/phi.png",
+  pit: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/pit.png",
+  sf: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/sf.png",
+  sea: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/sea.png",
+  tb: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/tb.png",
+  ten: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/ten.png",
+  wsh: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/wsh.png"
+};
 
 const bars = ["gold-logos","silver-logos","bronze-logos"];
 let barIndex = 0;
 
-teams.forEach((team, i) => {
+Object.entries(logos).forEach(([team, url], i) => {
   const logo = document.createElement("div");
   logo.className = "logo";
   logo.style.left = `${(i%10)*100}px`;
   logo.style.top = "10px";
-  logo.innerHTML = `<img src="https://a.espncdn.com/i/teamlogos/nfl/500/${team}.png" alt="${team}">`;
-
+  logo.innerHTML = `<img src="${url}" alt="${team}">`;
   document.getElementById(bars[barIndex]).appendChild(logo);
 
-  if ((i+1) % 11 === 0 && barIndex < 2) barIndex++; // keep spreading across 3 bars
+  if ((i+1) % 11 === 0 && barIndex < 2) barIndex++;
 });
 
-// Drag + drop
+// drag + drop
 let dragTarget = null, offsetX = 0, offsetY = 0;
-
 document.addEventListener("mousedown", e => {
   if (e.target.closest(".logo")) {
     dragTarget = e.target.closest(".logo");
     offsetX = e.clientX - dragTarget.offsetLeft;
     offsetY = e.clientY - dragTarget.offsetTop;
     dragTarget.style.cursor = "grabbing";
+  }
+});
+document.addEventListener("mousemove", e => {
+  if (dragTarget) {
+    dragTarget.style.left = (e.clientX - offsetX) + "px";
+    dragTarget.style.top = (e.clientY - offsetY) + "px";
+  }
+});
+document.addEventListener("mouseup", e => {
+  if (dragTarget) {
+    dragTarget.style.cursor = "grab";
+    dragTarget = null;
+  }
+});
+
+// toggle red X
+document.addEventListener("click", e => {
+  const el = e.target.closest(".logo");
+  if (el && !dragTarget) el.classList.toggle("crossed");
+});
+</script>
+</body>
+</html>
