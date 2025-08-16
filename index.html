@@ -17,9 +17,9 @@
     width: 100%;
     height: 110px;
     border-radius: 12px;
-    z-index: 1; /* keep under logos */
+    z-index: 1; /* bars under logos */
   }
-  .gold { top: 10px; background: linear-gradient(to bottom, #ffd700, #b8860b); }
+  .gold   { top: 10px;  background: linear-gradient(to bottom, #ffd700, #b8860b); }
   .silver { top: 130px; background: linear-gradient(to bottom, #c0c0c0, #808080); }
   .bronze { top: 250px; background: linear-gradient(to bottom, #cd7f32, #8b4513); }
 
@@ -27,7 +27,7 @@
     position: absolute;
     height: 90px;
     cursor: grab;
-    z-index: 10; /* logos always above bars */
+    z-index: 10; /* always above bars */
   }
   .logo img {
     height: 100%;
@@ -47,7 +47,7 @@
     transform-origin: center;
   }
   .logo.crossed::before { transform: translate(-50%, -50%) rotate(45deg); }
-  .logo.crossed::after { transform: translate(-50%, -50%) rotate(-45deg); }
+  .logo.crossed::after  { transform: translate(-50%, -50%) rotate(-45deg); }
 </style>
 </head>
 <body>
@@ -58,45 +58,45 @@
 
 <script>
 const logos = {
-  ari: "https://www.vectorlogo.zone/logos/nfl-ari/nfl-ari-icon.svg",
-  atl: "https://www.vectorlogo.zone/logos/nfl-atl/nfl-atl-icon.svg",
-  bal: "https://www.vectorlogo.zone/logos/nfl-bal/nfl-bal-icon.svg",
-  buf: "https://www.vectorlogo.zone/logos/nfl-buf/nfl-buf-icon.svg",
-  car: "https://www.vectorlogo.zone/logos/nfl-car/nfl-car-icon.svg",
-  chi: "https://www.vectorlogo.zone/logos/nfl-chi/nfl-chi-icon.svg",
-  cin: "https://www.vectorlogo.zone/logos/nfl-cin/nfl-cin-icon.svg",
-  cle: "https://www.vectorlogo.zone/logos/nfl-cle/nfl-cle-icon.svg",
-  dal: "https://www.vectorlogo.zone/logos/nfl-dal/nfl-dal-icon.svg",
-  den: "https://www.vectorlogo.zone/logos/nfl-den/nfl-den-icon.svg",
-  det: "https://www.vectorlogo.zone/logos/nfl-det/nfl-det-icon.svg",
-  gb: "https://www.vectorlogo.zone/logos/nfl-gb/nfl-gb-icon.svg",
-  hou: "https://www.vectorlogo.zone/logos/nfl-hou/nfl-hou-icon.svg",
-  ind: "https://www.vectorlogo.zone/logos/nfl-ind/nfl-ind-icon.svg",
-  jax: "https://www.vectorlogo.zone/logos/nfl-jac/nfl-jac-icon.svg",
-  kc: "https://www.vectorlogo.zone/logos/nfl-kan/nfl-kan-icon.svg",
-  lv: "https://www.vectorlogo.zone/logos/nfl-rai/nfl-rai-icon.svg",
-  lac: "https://www.vectorlogo.zone/logos/nfl-sdg/nfl-sdg-icon.svg",
-  lar: "https://www.vectorlogo.zone/logos/nfl-stl/nfl-stl-icon.svg",
-  mia: "https://www.vectorlogo.zone/logos/nfl-mia/nfl-mia-icon.svg",
-  min: "https://www.vectorlogo.zone/logos/nfl-min/nfl-min-icon.svg",
-  ne: "https://www.vectorlogo.zone/logos/nfl-ne/nfl-ne-icon.svg",
-  no: "https://www.vectorlogo.zone/logos/nfl-no/nfl-no-icon.svg",
-  nyg: "https://www.vectorlogo.zone/logos/nfl-nyg/nfl-nyg-icon.svg",
-  nyj: "https://www.vectorlogo.zone/logos/nfl-nyj/nfl-nyj-icon.svg",
-  phi: "https://www.vectorlogo.zone/logos/nfl-phi/nfl-phi-icon.svg",
-  pit: "https://www.vectorlogo.zone/logos/nfl-pit/nfl-pit-icon.svg",
-  sf: "https://www.vectorlogo.zone/logos/nfl-sfo/nfl-sfo-icon.svg",
-  sea: "https://www.vectorlogo.zone/logos/nfl-sea/nfl-sea-icon.svg",
-  tb: "https://www.vectorlogo.zone/logos/nfl-tb/nfl-tb-icon.svg",
-  ten: "https://www.vectorlogo.zone/logos/nfl-ten/nfl-ten-icon.svg",
-  was: "https://www.vectorlogo.zone/logos/nfl-was/nfl-was-icon.svg"
+  ari: "https://a.espncdn.com/i/teamlogos/nfl/500/ari.png",
+  atl: "https://a.espncdn.com/i/teamlogos/nfl/500/atl.png",
+  bal: "https://a.espncdn.com/i/teamlogos/nfl/500/bal.png",
+  buf: "https://a.espncdn.com/i/teamlogos/nfl/500/buf.png",
+  car: "https://a.espncdn.com/i/teamlogos/nfl/500/car.png",
+  chi: "https://a.espncdn.com/i/teamlogos/nfl/500/ch.png",
+  cin: "https://a.espncdn.com/i/teamlogos/nfl/500/cin.png",
+  cle: "https://a.espncdn.com/i/teamlogos/nfl/500/cle.png",
+  dal: "https://a.espncdn.com/i/teamlogos/nfl/500/dal.png",
+  den: "https://a.espncdn.com/i/teamlogos/nfl/500/den.png",
+  det: "https://a.espncdn.com/i/teamlogos/nfl/500/det.png",
+  gb:  "https://a.espncdn.com/i/teamlogos/nfl/500/gb.png",
+  hou: "https://a.espncdn.com/i/teamlogos/nfl/500/hou.png",
+  ind: "https://a.espncdn.com/i/teamlogos/nfl/500/ind.png",
+  jax: "https://a.espncdn.com/i/teamlogos/nfl/500/jax.png",
+  kc:  "https://a.espncdn.com/i/teamlogos/nfl/500/kc.png",
+  lv:  "https://a.espncdn.com/i/teamlogos/nfl/500/lv.png",
+  lac: "https://a.espncdn.com/i/teamlogos/nfl/500/lac.png",
+  lar: "https://a.espncdn.com/i/teamlogos/nfl/500/lar.png",
+  mia: "https://a.espncdn.com/i/teamlogos/nfl/500/mia.png",
+  min: "https://a.espncdn.com/i/teamlogos/nfl/500/min.png",
+  ne:  "https://a.espncdn.com/i/teamlogos/nfl/500/ne.png",
+  no:  "https://a.espncdn.com/i/teamlogos/nfl/500/no.png",
+  nyg: "https://a.espncdn.com/i/teamlogos/nfl/500/nyg.png",
+  nyj: "https://a.espncdn.com/i/teamlogos/nfl/500/nyj.png",
+  phi: "https://a.espncdn.com/i/teamlogos/nfl/500/phi.png",
+  pit: "https://a.espncdn.com/i/teamlogos/nfl/500/pit.png",
+  sf:  "https://a.espncdn.com/i/teamlogos/nfl/500/sf.png",
+  sea: "https://a.espncdn.com/i/teamlogos/nfl/500/sea.png",
+  tb:  "https://a.espncdn.com/i/teamlogos/nfl/500/tb.png",
+  ten: "https://a.espncdn.com/i/teamlogos/nfl/500/ten.png",
+  was: "https://a.espncdn.com/i/teamlogos/nfl/500/wsh.png"
 };
 
 let i = 0;
 for (const [team, url] of Object.entries(logos)) {
   const logo = document.createElement("div");
   logo.className = "logo";
-  logo.style.left = `${(i % 8) * 110 + 20}px`; // start in grid, adjustable later
+  logo.style.left = `${(i % 8) * 110 + 20}px`; 
   logo.style.top = `${Math.floor(i / 8) * 100 + 20}px`;
   logo.innerHTML = `<img src="${url}" alt="${team}">`;
   document.body.appendChild(logo);
@@ -116,7 +116,7 @@ document.addEventListener("mousedown", e => {
 document.addEventListener("mousemove", e => {
   if (dragTarget) {
     dragTarget.style.left = (e.clientX - offsetX) + "px";
-    dragTarget.style.top = (e.clientY - offsetY) + "px";
+    dragTarget.style.top  = (e.clientY - offsetY) + "px";
   }
 });
 document.addEventListener("mouseup", e => {
