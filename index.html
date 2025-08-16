@@ -8,19 +8,24 @@
   body {
     margin: 0;
     background: transparent;
+    overflow: hidden;
     user-select: none;
   }
-  .bar {
-    position: relative;
-    height: 110px;
-    margin: 10px 0;
-    border-radius: 12px;
-    z-index: 0; /* bars stay behind */
-  }
-  .gold { background: linear-gradient(to bottom, #ffd700, #b8860b); }
-  .silver { background: linear-gradient(to bottom, #c0c0c0, #808080); }
-  .bronze { background: linear-gradient(to bottom, #cd7f32, #8b4513); }
 
+  /* Bars behind everything */
+  .bar {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 110px;
+    border-radius: 12px;
+    z-index: -1; /* force behind logos */
+  }
+  .gold   { top: 10px;  background: linear-gradient(to bottom, #ffd700, #b8860b); }
+  .silver { top: 130px; background: linear-gradient(to bottom, #c0c0c0, #808080); }
+  .bronze { top: 250px; background: linear-gradient(to bottom, #cd7f32, #8b4513); }
+
+  /* Placeholder for crown */
   .crown-space {
     position: absolute;
     left: 10px;
@@ -28,23 +33,26 @@
     transform: translateY(-50%);
     width: 80px;
     height: 80px;
-    border: 2px dashed rgba(0,0,0,0.3); /* placeholder space */
-    z-index: 1;
+    border: 2px dashed rgba(0,0,0,0.3);
   }
 
+  /* Logos always above */
   .logos {
-    position: relative;
+    position: absolute;
     width: 100%;
-    height: 100%;
-    margin-left: 100px; /* leave space for crown */
-    z-index: 2; /* container above bars */
+    height: 110px;
+    left: 100px; /* make room for crown */
+    z-index: 5; /* higher than bars */
   }
+  #gold-logos { top: 10px; }
+  #silver-logos { top: 130px; }
+  #bronze-logos { top: 250px; }
 
   .logo {
     position: absolute;
     height: 90px;
     cursor: grab;
-    z-index: 3; /* logos always on top */
+    z-index: 10; /* always on top */
   }
   .logo img {
     height: 100%;
@@ -62,31 +70,28 @@
     height: 6px;
     background: red;
     transform-origin: center;
-    z-index: 4;
+    z-index: 20;
   }
   .logo.crossed::before { transform: translate(-50%, -50%) rotate(45deg); }
-  .logo.crossed::after { transform: translate(-50%, -50%) rotate(-45deg); }
+  .logo.crossed::after  { transform: translate(-50%, -50%) rotate(-45deg); }
 </style>
 </head>
 <body>
 
-  <!-- Gold Bar -->
-  <div class="bar gold">
-    <div class="crown-space"></div>
-    <div class="logos" id="gold-logos"></div>
-  </div>
+  <!-- Bars behind everything -->
+  <div class="bar gold"></div>
+  <div class="bar silver"></div>
+  <div class="bar bronze"></div>
 
-  <!-- Silver Bar -->
-  <div class="bar silver">
-    <div class="crown-space"></div>
-    <div class="logos" id="silver-logos"></div>
-  </div>
+  <!-- Crowns placeholders -->
+  <div class="crown-space" style="top:65px;"></div>
+  <div class="crown-space" style="top:185px;"></div>
+  <div class="crown-space" style="top:305px;"></div>
 
-  <!-- Bronze Bar -->
-  <div class="bar bronze">
-    <div class="crown-space"></div>
-    <div class="logos" id="bronze-logos"></div>
-  </div>
+  <!-- Logos containers -->
+  <div class="logos" id="gold-logos"></div>
+  <div class="logos" id="silver-logos"></div>
+  <div class="logos" id="bronze-logos"></div>
 
 <script>
 const teams = [
@@ -102,12 +107,12 @@ let barIndex = 0;
 teams.forEach((team, i) => {
   const logo = document.createElement("div");
   logo.className = "logo";
-  logo.style.left = `${120 + (i%8)*100}px`;
+  logo.style.left = `${(i%8)*100}px`;
   logo.style.top = "10px";
   logo.innerHTML = `<img src="https://a.espncdn.com/i/teamlogos/nfl/500/${team}.png" alt="${team}">`;
   document.getElementById(bars[barIndex]).appendChild(logo);
 
-  if ((i+1) % 11 === 0) barIndex++; // spread across 3 bars
+  if ((i+1) % 11 === 0) barIndex++; // spread across bars
 });
 
 // Drag + drop
@@ -122,23 +127,4 @@ document.addEventListener("mousedown", e => {
   }
 });
 document.addEventListener("mousemove", e => {
-  if (dragTarget) {
-    dragTarget.style.left = (e.clientX - offsetX) + "px";
-    dragTarget.style.top = (e.clientY - offsetY) + "px";
-  }
-});
-document.addEventListener("mouseup", e => {
-  if (dragTarget) {
-    dragTarget.style.cursor = "grab";
-    dragTarget = null;
-  }
-});
-
-// Click to toggle red X
-document.addEventListener("click", e => {
-  const el = e.target.closest(".logo");
-  if (el && !dragTarget) el.classList.toggle("crossed");
-});
-</script>
-</body>
-</html>
+  if (drag
