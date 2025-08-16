@@ -19,13 +19,13 @@
     width: 100%;
     height: 110px;
     border-radius: 12px;
-    z-index: -1; /* force behind logos */
+    z-index: 0; /* background only */
   }
-  .gold   { top: 10px;  background: linear-gradient(to bottom, #ffd700, #b8860b); }
+  .gold { top: 10px; background: linear-gradient(to bottom, #ffd700, #b8860b); }
   .silver { top: 130px; background: linear-gradient(to bottom, #c0c0c0, #808080); }
   .bronze { top: 250px; background: linear-gradient(to bottom, #cd7f32, #8b4513); }
 
-  /* Placeholder for crown */
+  /* Crown placeholder space */
   .crown-space {
     position: absolute;
     left: 10px;
@@ -34,15 +34,17 @@
     width: 80px;
     height: 80px;
     border: 2px dashed rgba(0,0,0,0.3);
+    z-index: 5;
+    pointer-events: none;
   }
 
-  /* Logos always above */
+  /* Logo containers */
   .logos {
     position: absolute;
-    width: 100%;
+    left: 100px; /* leave space for crown */
+    width: calc(100% - 100px);
     height: 110px;
-    left: 100px; /* make room for crown */
-    z-index: 5; /* higher than bars */
+    z-index: 10; /* always above bars */
   }
   #gold-logos { top: 10px; }
   #silver-logos { top: 130px; }
@@ -52,7 +54,7 @@
     position: absolute;
     height: 90px;
     cursor: grab;
-    z-index: 10; /* always on top */
+    z-index: 15; /* ensure above everything */
   }
   .logo img {
     height: 100%;
@@ -73,22 +75,22 @@
     z-index: 20;
   }
   .logo.crossed::before { transform: translate(-50%, -50%) rotate(45deg); }
-  .logo.crossed::after  { transform: translate(-50%, -50%) rotate(-45deg); }
+  .logo.crossed::after { transform: translate(-50%, -50%) rotate(-45deg); }
 </style>
 </head>
 <body>
 
-  <!-- Bars behind everything -->
+  <!-- Bars -->
   <div class="bar gold"></div>
   <div class="bar silver"></div>
   <div class="bar bronze"></div>
 
-  <!-- Crowns placeholders -->
+  <!-- Crown placeholders -->
   <div class="crown-space" style="top:65px;"></div>
   <div class="crown-space" style="top:185px;"></div>
   <div class="crown-space" style="top:305px;"></div>
 
-  <!-- Logos containers -->
+  <!-- Logo rows -->
   <div class="logos" id="gold-logos"></div>
   <div class="logos" id="silver-logos"></div>
   <div class="logos" id="bronze-logos"></div>
@@ -107,12 +109,13 @@ let barIndex = 0;
 teams.forEach((team, i) => {
   const logo = document.createElement("div");
   logo.className = "logo";
-  logo.style.left = `${(i%8)*100}px`;
+  logo.style.left = `${(i%10)*100}px`;
   logo.style.top = "10px";
   logo.innerHTML = `<img src="https://a.espncdn.com/i/teamlogos/nfl/500/${team}.png" alt="${team}">`;
+
   document.getElementById(bars[barIndex]).appendChild(logo);
 
-  if ((i+1) % 11 === 0) barIndex++; // spread across bars
+  if ((i+1) % 11 === 0 && barIndex < 2) barIndex++; // keep spreading across 3 bars
 });
 
 // Drag + drop
@@ -124,7 +127,3 @@ document.addEventListener("mousedown", e => {
     offsetX = e.clientX - dragTarget.offsetLeft;
     offsetY = e.clientY - dragTarget.offsetTop;
     dragTarget.style.cursor = "grabbing";
-  }
-});
-document.addEventListener("mousemove", e => {
-  if (drag
