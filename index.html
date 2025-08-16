@@ -1,3 +1,8 @@
+
+Matt Koger <mlkoger@gmail.com>
+9:33 PM (0 minutes ago)
+to me
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,19 +13,18 @@
   body {
     margin: 0;
     background: transparent;
+    user-select: none;
   }
   .bar {
     position: relative;
-    height: 100px;
+    height: 110px;
     margin: 10px 0;
     border-radius: 12px;
-    display: block;
   }
   .gold { background: linear-gradient(to bottom, #ffd700, #b8860b); }
   .silver { background: linear-gradient(to bottom, #c0c0c0, #808080); }
   .bronze { background: linear-gradient(to bottom, #cd7f32, #8b4513); }
 
-  /* Reserved crown space */
   .crown-space {
     position: absolute;
     left: 10px;
@@ -28,23 +32,24 @@
     transform: translateY(-50%);
     width: 80px;
     height: 80px;
-    border: 2px dashed rgba(255,255,255,0.3); /* just a placeholder box */
-    border-radius: 10px;
+    border: 2px dashed rgba(0,0,0,0.3); /* just a placeholder space */
   }
 
   .logos {
     position: relative;
     width: 100%;
     height: 100%;
+    margin-left: 100px; /* leave space for crown */
   }
 
   .logo {
     position: absolute;
-    height: 80px;
-    cursor: pointer;
+    height: 90px;
+    cursor: grab;
   }
   .logo img {
     height: 100%;
+    pointer-events: none;
   }
 
   /* Red X overlay */
@@ -64,68 +69,76 @@
 </style>
 </head>
 <body>
+
   <!-- Gold Bar -->
   <div class="bar gold">
     <div class="crown-space"></div>
-    <div class="logos">
-      <!-- Top row 11 teams -->
-      <div class="logo" style="left:120px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/ari.png" alt="Cardinals"></div>
-      <div class="logo" style="left:220px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/atl.png" alt="Falcons"></div>
-      <div class="logo" style="left:320px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/bal.png" alt="Ravens"></div>
-      <div class="logo" style="left:420px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/buf.png" alt="Bills"></div>
-      <div class="logo" style="left:520px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/car.png" alt="Panthers"></div>
-      <div class="logo" style="left:620px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/chi.png" alt="Bears"></div>
-      <div class="logo" style="left:720px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/cin.png" alt="Bengals"></div>
-      <div class="logo" style="left:820px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/cle.png" alt="Browns"></div>
-      <div class="logo" style="left:920px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/dal.png" alt="Cowboys"></div>
-      <div class="logo" style="left:1020px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/den.png" alt="Broncos"></div>
-      <div class="logo" style="left:1120px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/det.png" alt="Lions"></div>
-    </div>
+    <div class="logos" id="gold-logos"></div>
   </div>
 
   <!-- Silver Bar -->
   <div class="bar silver">
     <div class="crown-space"></div>
-    <div class="logos">
-      <!-- Middle row 11 teams -->
-      <div class="logo" style="left:120px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/gb.png" alt="Packers"></div>
-      <div class="logo" style="left:220px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/hou.png" alt="Texans"></div>
-      <div class="logo" style="left:320px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/ind.png" alt="Colts"></div>
-      <div class="logo" style="left:420px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/jax.png" alt="Jaguars"></div>
-      <div class="logo" style="left:520px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/kc.png" alt="Chiefs"></div>
-      <div class="logo" style="left:620px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/lv.png" alt="Raiders"></div>
-      <div class="logo" style="left:720px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/lac.png" alt="Chargers"></div>
-      <div class="logo" style="left:820px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/lar.png" alt="Rams"></div>
-      <div class="logo" style="left:920px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/mia.png" alt="Dolphins"></div>
-      <div class="logo" style="left:1020px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/min.png" alt="Vikings"></div>
-      <div class="logo" style="left:1120px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/ne.png" alt="Patriots"></div>
-    </div>
+    <div class="logos" id="silver-logos"></div>
   </div>
 
   <!-- Bronze Bar -->
   <div class="bar bronze">
     <div class="crown-space"></div>
-    <div class="logos">
-      <!-- Bottom row 10 teams -->
-      <div class="logo" style="left:120px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/no.png" alt="Saints"></div>
-      <div class="logo" style="left:220px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/nyg.png" alt="Giants"></div>
-      <div class="logo" style="left:320px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/nyj.png" alt="Jets"></div>
-      <div class="logo" style="left:420px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/phi.png" alt="Eagles"></div>
-      <div class="logo" style="left:520px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/pit.png" alt="Steelers"></div>
-      <div class="logo" style="left:620px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/sf.png" alt="49ers"></div>
-      <div class="logo" style="left:720px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/sea.png" alt="Seahawks"></div>
-      <div class="logo" style="left:820px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/tb.png" alt="Buccaneers"></div>
-      <div class="logo" style="left:920px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/ten.png" alt="Titans"></div>
-      <div class="logo" style="left:1020px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/wsh.png" alt="Commanders"></div>
-    </div>
+    <div class="logos" id="bronze-logos"></div>
   </div>
 
 <script>
-  document.querySelectorAll('.logo').forEach(el => {
-    el.addEventListener('click', () => {
-      el.classList.toggle('crossed');
-    });
-  });
+const teams = [
+  "ari","atl","bal","buf","car","chi","cin","cle",
+  "dal","den","det","gb","hou","ind","jax","kc",
+  "lv","lac","lar","mia","min","ne","no","nyg",
+  "nyj","phi","pit","sf","sea","tb","ten","wsh"
+];
+
+const bars = ["gold-logos","silver-logos","bronze-logos"];
+let barIndex = 0;
+
+teams.forEach((team, i) => {
+  const logo = document.createElement("div");
+  logo.className = "logo";
+  logo.style.left = `${120 + (i%8)*100}px`;
+  logo.style.top = "10px";
+  logo.innerHTML = `<img src="https://a.espncdn.com/i/teamlogos/nfl/500/${team}.png" alt="${team}">`;
+  document.getElementById(bars[barIndex]).appendChild(logo);
+
+  if ((i+1) % 11 === 0) barIndex++; // spread across 3 bars
+});
+
+// Drag + drop
+let dragTarget = null, offsetX = 0, offsetY = 0;
+
+document.addEventListener("mousedown", e => {
+  if (e.target.closest(".logo")) {
+    dragTarget = e.target.closest(".logo");
+    offsetX = e.clientX - dragTarget.offsetLeft;
+    offsetY = e.clientY - dragTarget.offsetTop;
+    dragTarget.style.cursor = "grabbing";
+  }
+});
+document.addEventListener("mousemove", e => {
+  if (dragTarget) {
+    dragTarget.style.left = (e.clientX - offsetX) + "px";
+    dragTarget.style.top = (e.clientY - offsetY) + "px";
+  }
+});
+document.addEventListener("mouseup", e => {
+  if (dragTarget) {
+    dragTarget.style.cursor = "grab";
+    dragTarget = null;
+  }
+});
+
+// Click to toggle red X
+document.addEventListener("click", e => {
+  const el = e.target.closest(".logo");
+  if (el && !dragTarget) el.classList.toggle("crossed");
+});
 </script>
 </body>
 </html>
