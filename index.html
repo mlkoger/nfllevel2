@@ -20,12 +20,16 @@
   .silver { background: linear-gradient(to bottom, #c0c0c0, #808080); }
   .bronze { background: linear-gradient(to bottom, #cd7f32, #8b4513); }
 
-  .crown {
+  /* Reserved crown space */
+  .crown-space {
     position: absolute;
     left: 10px;
     top: 50%;
     transform: translateY(-50%);
+    width: 80px;
     height: 80px;
+    border: 2px dashed rgba(255,255,255,0.3); /* just a placeholder box */
+    border-radius: 10px;
   }
 
   .logos {
@@ -62,34 +66,57 @@
 <body>
   <!-- Gold Bar -->
   <div class="bar gold">
-    <img class="crown" src="https://upload.wikimedia.org/wikipedia/commons/1/10/Gold_crown.png" alt="Gold Crown">
+    <div class="crown-space"></div>
     <div class="logos">
-      <div class="logo" style="left:120px; top:10px;">
-        <img src="https://a.espncdn.com/i/teamlogos/nfl/500/phi.png" alt="Eagles">
-      </div>
-      <div class="logo" style="left:220px; top:10px;">
-        <img src="https://a.espncdn.com/i/teamlogos/nfl/500/dal.png" alt="Cowboys">
-      </div>
+      <!-- Top row 11 teams -->
+      <div class="logo" style="left:120px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/ari.png" alt="Cardinals"></div>
+      <div class="logo" style="left:220px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/atl.png" alt="Falcons"></div>
+      <div class="logo" style="left:320px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/bal.png" alt="Ravens"></div>
+      <div class="logo" style="left:420px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/buf.png" alt="Bills"></div>
+      <div class="logo" style="left:520px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/car.png" alt="Panthers"></div>
+      <div class="logo" style="left:620px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/chi.png" alt="Bears"></div>
+      <div class="logo" style="left:720px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/cin.png" alt="Bengals"></div>
+      <div class="logo" style="left:820px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/cle.png" alt="Browns"></div>
+      <div class="logo" style="left:920px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/dal.png" alt="Cowboys"></div>
+      <div class="logo" style="left:1020px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/den.png" alt="Broncos"></div>
+      <div class="logo" style="left:1120px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/det.png" alt="Lions"></div>
     </div>
   </div>
 
   <!-- Silver Bar -->
   <div class="bar silver">
-    <img class="crown" src="https://upload.wikimedia.org/wikipedia/commons/f/f7/Crown_icon_silver.png" alt="Silver Crown">
+    <div class="crown-space"></div>
     <div class="logos">
-      <div class="logo" style="left:120px; top:10px;">
-        <img src="https://a.espncdn.com/i/teamlogos/nfl/500/sf.png" alt="49ers">
-      </div>
+      <!-- Middle row 11 teams -->
+      <div class="logo" style="left:120px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/gb.png" alt="Packers"></div>
+      <div class="logo" style="left:220px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/hou.png" alt="Texans"></div>
+      <div class="logo" style="left:320px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/ind.png" alt="Colts"></div>
+      <div class="logo" style="left:420px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/jax.png" alt="Jaguars"></div>
+      <div class="logo" style="left:520px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/kc.png" alt="Chiefs"></div>
+      <div class="logo" style="left:620px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/lv.png" alt="Raiders"></div>
+      <div class="logo" style="left:720px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/lac.png" alt="Chargers"></div>
+      <div class="logo" style="left:820px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/lar.png" alt="Rams"></div>
+      <div class="logo" style="left:920px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/mia.png" alt="Dolphins"></div>
+      <div class="logo" style="left:1020px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/min.png" alt="Vikings"></div>
+      <div class="logo" style="left:1120px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/ne.png" alt="Patriots"></div>
     </div>
   </div>
 
   <!-- Bronze Bar -->
   <div class="bar bronze">
-    <img class="crown" src="https://upload.wikimedia.org/wikipedia/commons/4/42/Golden_crown_antique.png" alt="Bronze Crown">
+    <div class="crown-space"></div>
     <div class="logos">
-      <div class="logo" style="left:120px; top:10px;">
-        <img src="https://a.espncdn.com/i/teamlogos/nfl/500/gb.png" alt="Packers">
-      </div>
+      <!-- Bottom row 10 teams -->
+      <div class="logo" style="left:120px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/no.png" alt="Saints"></div>
+      <div class="logo" style="left:220px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/nyg.png" alt="Giants"></div>
+      <div class="logo" style="left:320px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/nyj.png" alt="Jets"></div>
+      <div class="logo" style="left:420px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/phi.png" alt="Eagles"></div>
+      <div class="logo" style="left:520px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/pit.png" alt="Steelers"></div>
+      <div class="logo" style="left:620px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/sf.png" alt="49ers"></div>
+      <div class="logo" style="left:720px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/sea.png" alt="Seahawks"></div>
+      <div class="logo" style="left:820px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/tb.png" alt="Buccaneers"></div>
+      <div class="logo" style="left:920px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/ten.png" alt="Titans"></div>
+      <div class="logo" style="left:1020px; top:10px;"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/wsh.png" alt="Commanders"></div>
     </div>
   </div>
 
