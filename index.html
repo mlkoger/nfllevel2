@@ -9,7 +9,6 @@
     margin: 0;
     background: transparent;
     overflow: hidden;
-    user-select: none;
   }
 
   .bar {
@@ -18,46 +17,24 @@
     width: 100%;
     height: 110px;
     border-radius: 12px;
-    z-index: 0;
+    z-index: 1; /* keep under logos */
   }
   .gold { top: 10px; background: linear-gradient(to bottom, #ffd700, #b8860b); }
   .silver { top: 130px; background: linear-gradient(to bottom, #c0c0c0, #808080); }
   .bronze { top: 250px; background: linear-gradient(to bottom, #cd7f32, #8b4513); }
 
-  .crown-space {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 80px;
-    height: 80px;
-    border: 2px dashed rgba(0,0,0,0.3);
-    z-index: 5;
-    pointer-events: none;
-  }
-
-  .logos {
-    position: absolute;
-    left: 100px;
-    width: calc(100% - 100px);
-    height: 110px;
-    z-index: 10;
-  }
-  #gold-logos { top: 10px; }
-  #silver-logos { top: 130px; }
-  #bronze-logos { top: 250px; }
-
   .logo {
     position: absolute;
     height: 90px;
     cursor: grab;
-    z-index: 15;
+    z-index: 10; /* logos always above bars */
   }
   .logo img {
     height: 100%;
     pointer-events: none;
   }
 
+  /* Red X toggle */
   .logo.crossed::before,
   .logo.crossed::after {
     content: "";
@@ -68,7 +45,6 @@
     height: 6px;
     background: red;
     transform-origin: center;
-    z-index: 20;
   }
   .logo.crossed::before { transform: translate(-50%, -50%) rotate(45deg); }
   .logo.crossed::after { transform: translate(-50%, -50%) rotate(-45deg); }
@@ -80,65 +56,54 @@
   <div class="bar silver"></div>
   <div class="bar bronze"></div>
 
-  <div class="crown-space" style="top:65px;"></div>
-  <div class="crown-space" style="top:185px;"></div>
-  <div class="crown-space" style="top:305px;"></div>
-
-  <div class="logos" id="gold-logos"></div>
-  <div class="logos" id="silver-logos"></div>
-  <div class="logos" id="bronze-logos"></div>
-
 <script>
 const logos = {
-  ari: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/ari.png",
-  atl: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/atl.png",
-  bal: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/bal.png",
-  buf: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/buf.png",
-  car: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/car.png",
-  chi: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/chi.png",
-  cin: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/cin.png",
-  cle: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/cle.png",
-  dal: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/dal.png",
-  den: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/den.png",
-  det: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/det.png",
-  gb: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/gb.png",
-  hou: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/hou.png",
-  ind: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/ind.png",
-  jax: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/jax.png",
-  kc: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/kc.png",
-  lv: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/lv.png",
-  lac: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/lac.png",
-  lar: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/lar.png",
-  mia: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/mia.png",
-  min: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/min.png",
-  ne: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/ne.png",
-  no: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/no.png",
-  nyg: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/nyg.png",
-  nyj: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/nyj.png",
-  phi: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/phi.png",
-  pit: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/pit.png",
-  sf: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/sf.png",
-  sea: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/sea.png",
-  tb: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/tb.png",
-  ten: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/ten.png",
-  wsh: "https://raw.githubusercontent.com/DenverCoder1/football-team-logos/master/nfl/wsh.png"
+  ari: "https://www.vectorlogo.zone/logos/nfl-ari/nfl-ari-icon.svg",
+  atl: "https://www.vectorlogo.zone/logos/nfl-atl/nfl-atl-icon.svg",
+  bal: "https://www.vectorlogo.zone/logos/nfl-bal/nfl-bal-icon.svg",
+  buf: "https://www.vectorlogo.zone/logos/nfl-buf/nfl-buf-icon.svg",
+  car: "https://www.vectorlogo.zone/logos/nfl-car/nfl-car-icon.svg",
+  chi: "https://www.vectorlogo.zone/logos/nfl-chi/nfl-chi-icon.svg",
+  cin: "https://www.vectorlogo.zone/logos/nfl-cin/nfl-cin-icon.svg",
+  cle: "https://www.vectorlogo.zone/logos/nfl-cle/nfl-cle-icon.svg",
+  dal: "https://www.vectorlogo.zone/logos/nfl-dal/nfl-dal-icon.svg",
+  den: "https://www.vectorlogo.zone/logos/nfl-den/nfl-den-icon.svg",
+  det: "https://www.vectorlogo.zone/logos/nfl-det/nfl-det-icon.svg",
+  gb: "https://www.vectorlogo.zone/logos/nfl-gb/nfl-gb-icon.svg",
+  hou: "https://www.vectorlogo.zone/logos/nfl-hou/nfl-hou-icon.svg",
+  ind: "https://www.vectorlogo.zone/logos/nfl-ind/nfl-ind-icon.svg",
+  jax: "https://www.vectorlogo.zone/logos/nfl-jac/nfl-jac-icon.svg",
+  kc: "https://www.vectorlogo.zone/logos/nfl-kan/nfl-kan-icon.svg",
+  lv: "https://www.vectorlogo.zone/logos/nfl-rai/nfl-rai-icon.svg",
+  lac: "https://www.vectorlogo.zone/logos/nfl-sdg/nfl-sdg-icon.svg",
+  lar: "https://www.vectorlogo.zone/logos/nfl-stl/nfl-stl-icon.svg",
+  mia: "https://www.vectorlogo.zone/logos/nfl-mia/nfl-mia-icon.svg",
+  min: "https://www.vectorlogo.zone/logos/nfl-min/nfl-min-icon.svg",
+  ne: "https://www.vectorlogo.zone/logos/nfl-ne/nfl-ne-icon.svg",
+  no: "https://www.vectorlogo.zone/logos/nfl-no/nfl-no-icon.svg",
+  nyg: "https://www.vectorlogo.zone/logos/nfl-nyg/nfl-nyg-icon.svg",
+  nyj: "https://www.vectorlogo.zone/logos/nfl-nyj/nfl-nyj-icon.svg",
+  phi: "https://www.vectorlogo.zone/logos/nfl-phi/nfl-phi-icon.svg",
+  pit: "https://www.vectorlogo.zone/logos/nfl-pit/nfl-pit-icon.svg",
+  sf: "https://www.vectorlogo.zone/logos/nfl-sfo/nfl-sfo-icon.svg",
+  sea: "https://www.vectorlogo.zone/logos/nfl-sea/nfl-sea-icon.svg",
+  tb: "https://www.vectorlogo.zone/logos/nfl-tb/nfl-tb-icon.svg",
+  ten: "https://www.vectorlogo.zone/logos/nfl-ten/nfl-ten-icon.svg",
+  was: "https://www.vectorlogo.zone/logos/nfl-was/nfl-was-icon.svg"
 };
 
-const bars = ["gold-logos","silver-logos","bronze-logos"];
-let barIndex = 0;
-
-Object.entries(logos).forEach(([team, url], i) => {
+let i = 0;
+for (const [team, url] of Object.entries(logos)) {
   const logo = document.createElement("div");
   logo.className = "logo";
-  logo.style.left = `${(i%10)*100}px`;
-  logo.style.top = "10px";
+  logo.style.left = `${(i % 8) * 110 + 20}px`; // start in grid, adjustable later
+  logo.style.top = `${Math.floor(i / 8) * 100 + 20}px`;
   logo.innerHTML = `<img src="${url}" alt="${team}">`;
-  document.getElementById(bars[barIndex]).appendChild(logo);
+  document.body.appendChild(logo);
+  i++;
+}
 
-  if ((i+1) % 11 === 0 && barIndex < 2) barIndex++;
-});
-
-// drag + drop
+// Drag + drop
 let dragTarget = null, offsetX = 0, offsetY = 0;
 document.addEventListener("mousedown", e => {
   if (e.target.closest(".logo")) {
@@ -161,10 +126,10 @@ document.addEventListener("mouseup", e => {
   }
 });
 
-// toggle red X
+// Toggle red X on click
 document.addEventListener("click", e => {
   const el = e.target.closest(".logo");
-  if (el && !dragTarget) el.classList.toggle("crossed");
+  if (el) el.classList.toggle("crossed");
 });
 </script>
 </body>
